@@ -1,4 +1,4 @@
-console.log('hi world');
-const Try = (argument) => {
-
-     }
+const test = arg => {
+	console.log(arg)
+}
+test('hello')
