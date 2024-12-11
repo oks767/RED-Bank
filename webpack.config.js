@@ -35,7 +35,7 @@ module.exports = {
     mode,
     entry: './index.js',
     output: {
-        filename: isDev ? '[name].css': '[name].[contenthash].css',
+        filename: isDev ? '[name].js': '[name].[contenthash].js',
         path: path.resolve(__dirname, 'dist'),
         assetModuleFilename: 'public/[name].[contenthash][ext][query]'
     },
