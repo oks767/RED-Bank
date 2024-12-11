@@ -1,5 +1,7 @@
 {
 	"compilerOptions": {
+		"allowJs": true,
+		"target": "ES6",
 		"baseUrl": ".",
 		"paths": {
 			"@/*": ["src/*"]

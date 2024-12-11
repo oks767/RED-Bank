@@ -1,4 +1,2 @@
-const test = arg => {
-	console.log(arg)
-}
-test('hello')
+import { Router } from './router/router'
+new Router()
