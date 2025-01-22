@@ -9,7 +9,7 @@ export class Layout {
 		return `${headerHTML}
 	<main>
 	${this.children}
-	</main>
+	</main
 	`
 	}
 }
