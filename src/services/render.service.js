@@ -36,6 +36,7 @@ class RenderService extends HTMLElement {
 	#applyModuleStyles (style) {
 		const styleElement = Object.entries(style).map(([componentName, styles]) => {
 			const componentReplacePattern = new RegExp(`component-${componentName}`, 'g');
+			// нужно передать уникальное значение класса для замены с помощью replace
 			return styles.replace(componentReplacePattern, '');
 	}, '');	
 	styleElement.innerHTML = styleElement;
