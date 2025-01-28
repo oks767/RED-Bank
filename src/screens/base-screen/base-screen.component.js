@@ -1,15 +1,20 @@
+import { getTitle } from '@/config/seo.config'
+
 export class BaseScreen {
-	#title = null
-	constructor(title) {
-		this.#title = title
-		this.createTitle(this.#title)
-		
+	/**
+	 * Create a new BaseScreen instance.
+	 * @param {Object} options - The options for the BaseScreen.
+	 * @param {string} options.title - The title for the screen.
+	 */
+	constructor({ title }) {
+		document.title = getTitle(title)
 	}
-	// TODO: add title to the document with the title of the screen
-	createTitle() {
-		document.title = this.#title
-	}
+
+	/**
+	 * Render the child component content.
+	 * @returns {HTMLElement}
+	 */
 	render() {
-		return
+		throw new Error('Render method must be implemented in the child class')
 	}
 }

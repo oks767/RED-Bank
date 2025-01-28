@@ -1,12 +1,16 @@
 import { BaseScreen } from '@/screens/base-screen/base-screen.component'
+import renderService from '@/services/render.service'
+
+import styles from './home.module.scss'
+import template from './home.template.html'
 
 export class Home extends BaseScreen {
-		// TODO: add title to the document
-			constructor() {
-					super('Home')
-			}
-    
+	constructor() {
+		super({ title: 'Home' })
+	}
+
 	render() {
-		return '<p>Home</p>'
+		const element = renderService.htmlToElement(template, [], styles)
+		return element.outerHTML
 	}
 }

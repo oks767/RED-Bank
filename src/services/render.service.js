@@ -1,44 +1,97 @@
-import htmlFile from './index.html'
-class RenderService extends HTMLElement {
+import ChildComponent from '@/components/child-components/child.component'
 
+class RenderService {
+	/**
+	 * @param {string} html
+	 * @param {Array} components
+	 * @param {Object} [styles]
+	 * @returns {HTMLElement}
+	 */
 	htmlToElement(html, components = [], styles) {
-		const template = document.createElement('template');
-		template.innerHTML = html;
+		const template = document.createElement('template')
+		template.innerHTML = html.trim()
 
-		this.#replaceComponentTag
-		this.#applyModuleStyles(styles);
-		return template.content.firstChild;
+		const element = template.content.firstChild
+
+		if (styles) {
+			this.#applyModuleStyles(styles, element)
+		}
+
+		this.#replaceComponentTags(element, components)
+
+		return element
 	}
-	
-	#replaceComponentTag(parentElement, components) {
-		const componentTagPattern = /^component-/;
-		const allElements = parentElement.getElementByTagName('*');
+
+	/**
+	 * @param {HTMLElement} parentElement
+	 * @param {Array} components
+	 */
+	#replaceComponentTags(parentElement, components) {
+		const componentTagPattern = /^component-/
+		const allElements = parentElement.getElementsByTagName('*')
+
 		for (const element of allElements) {
-			if (componentTagPattern.test(element.tagName.toLowerCase())) {
-				const componentName = element.tagName.toLowerCase().replace(componentTagPattern, '').replace(/-/g, '');
-				// найти компонент в массиве компонентов в текущей итерации цикла
+			const elementTagName = element.tagName.toLowerCase()
+			if (componentTagPattern.test(elementTagName)) {
+				const componentName = elementTagName
+					.replace(componentTagPattern, '')
+					.replace(/-/g, '')
+
 				const foundComponent = components.find(Component => {
-					const instance = Component instanceof ChildComponent ? Component : new Component();
-					return instance.constructor.name.toLowerCase() === componentName;
-				});
-				// если компонент найден, заменить элемент на содержимое компонента
-				if(foundComponent) {
-					const componentContent = foundComponent instanceof ChildComponent ? foundComponent : new foundComponent().render();
-					element.replaceWith(componentContent);
+					const instance =
+						Component instanceof ChildComponent ? Component : new Component()
+
+					return instance.constructor.name.toLowerCase() === componentName
+				})
+
+				if (foundComponent) {
+					const componentContent =
+						foundComponent instanceof ChildComponent
+							? foundComponent.render()
+							: new foundComponent().render()
+					element.replaceWith(componentContent)
 				} else {
-					console.error(`Component ${componentName} not found`);
+					console.error(
+						`Component "${componentName}" not found in the provided components array.`
+					)
 				}
 			}
 		}
 	}
-	// create #applyModuleStyles
-	// будет принимать стили в виде объекта styles: {componentName: 'styles'}; нужно создать массив, пройтись по нему и добавлять уникальные значения к классу элемента
-	#applyModuleStyles (style) {
-		const styleElement = Object.entries(style).map(([componentName, styles]) => {
-			const componentReplacePattern = new RegExp(`component-${componentName}`, 'g');
-			// нужно передать уникальное значение класса для замены с помощью replace
-			return styles.replace(componentReplacePattern, '');
-	}, '');	
-	styleElement.innerHTML = styleElement;
+
+	/**
+	 * @param {Object} moduleStyles
+	 * @param {string} element
+	 * @returns {void}
+	 */
+	#applyModuleStyles(moduleStyles, element) {
+		if (!element) return
+
+		const applyStyles = element => {
+			for (const [key, value] of Object.entries(moduleStyles)) {
+				if (element.classList.contains(key)) {
+					element.classList.remove(key)
+					element.classList.add(value)
+				}
+			}
+		}
+
+		if (element.getAttribute('class')) {
+			applyStyles(element)
+		}
+
+		const elements = element.querySelectorAll('*')
+		elements.forEach(applyStyles)
 	}
+}
+
+export default new RenderService()
+
+{
+	/* <div class='home'>
+	<h1 class='text'></h1>
+	<component-heading></component-heading>
+	<component-card-info></component-card-info>
+</div>
+ */
 }
